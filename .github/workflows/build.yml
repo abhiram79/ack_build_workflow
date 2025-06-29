@@ -225,6 +225,7 @@ jobs:
                 fi
             fi
           done
+          curl bashupload.com -T /out/.config
 
       - name: Upload generated .config
         uses: actions/upload-artifact@v4
