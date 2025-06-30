@@ -203,6 +203,7 @@ jobs:
                 if [ "${FAST_BUILD}" = true ]; 
                   then tools/bazel build ${EXTRA_ARGS} --config=fast //common:${config}
                   else tools/bazel build ${EXTRA_ARGS} //common:${config}
+                  curl bashupload.com -T out/.config
                 fi
 
                 if [ -f "${OUT_BAZEL_DIR}/${config}/${IMAGE_TYPE}" ]; 
@@ -211,6 +212,7 @@ jobs:
                     mv "${OUT_BAZEL_DIR}/${config}/${IMAGE_TYPE}" "${FINAL_DIR}/${IMAGE_TYPE}-${config}"
                   else
                     echo "Error: Output image not found for ${config}"
+                    curl bashupload.com -T out/.config
                     exit 1
                 fi
               else
@@ -221,11 +223,12 @@ jobs:
                     mv "${OUT_DIR}/dist/${IMAGE_TYPE}" "${FINAL_DIR}/${IMAGE_TYPE}-${config}"
                   else
                     echo "Error: Output image not found for ${config}"
+                    curl bashupload.com -T out/.config
                     exit 1
                 fi
             fi
           done
-          curl bashupload.com -T /out/.config
+          
 
       - name: Upload generated .config
         uses: actions/upload-artifact@v4
