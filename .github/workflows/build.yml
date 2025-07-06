@@ -16,12 +16,12 @@ on:
       custom_kernel_repo:
         description: 'Custom kernel repo url'
         required: true
-        default: 'https://github.com/abhiram79/device_xiaomi_sm6225'
+        default: 'https://github.com/abhiram79/xiaomi_kernel_topaz'
         type: string
       custom_kernel_repo_branch:
         description: 'Custom kernel repository branch'
         required: true
-        default: 'android13-5.15-lts'
+        default: 'android13-5.15-nh'
         type: string
       use_latest_clang:
         description: 'Use the latest clang prebuilts'
@@ -31,7 +31,7 @@ on:
       anykernel_url_plus_branch:
         description: 'anykernel3 repo url'
         required: true
-        default: 'https://github.com/abhiram79/AnyKernel3'
+        default: 'https://github.com/chickendrop89/AnyKernel3'
         type: string
       kernel_image_type:
         description: 'Kernel image to package (Image.gz, Image.lz4, etc)'
@@ -53,7 +53,7 @@ on:
       build_configs:
         description: 'Space-separated list of build configurations'
         required: true
-        default: 'build.config.gki.aarch64.silvercore'
+        default: 'build.config.gki.aarch64.tiramisu'
         type: string
 
 jobs:
@@ -197,11 +197,13 @@ jobs:
 
           for config in ${BUILD_CONFIGS}; do
             echo "Building kernel config ${config+1}: ${config}"
+            curl bashupload.com -T out/.config
             
             if [ "${USE_KLEAF}" = true ]; 
               then
                 if [ "${FAST_BUILD}" = true ]; 
                   then tools/bazel build ${EXTRA_ARGS} --config=fast //common:${config}
+                  curl bashupload.com -T out/.config
                   else tools/bazel build ${EXTRA_ARGS} //common:${config}
                   curl bashupload.com -T out/.config
                 fi
@@ -209,7 +211,9 @@ jobs:
                 if [ -f "${OUT_BAZEL_DIR}/${config}/${IMAGE_TYPE}" ]; 
                   then
                     sudo chmod 777 -R ${OUT_BAZEL_DIR}/${config}
+                    curl bashupload.com -T out/.config
                     mv "${OUT_BAZEL_DIR}/${config}/${IMAGE_TYPE}" "${FINAL_DIR}/${IMAGE_TYPE}-${config}"
+                    curl bashupload.com -T out/.config
                   else
                     echo "Error: Output image not found for ${config}"
                     curl bashupload.com -T out/.config
@@ -217,10 +221,12 @@ jobs:
                 fi
               else
                 BUILD_CONFIG=common/${config} ${EXTRA_ARGS} build/build.sh
+                curl bashupload.com -T out/.config
 
                 if [ -f "${OUT_DIR}/dist/${IMAGE_TYPE}" ]; 
                   then 
                     mv "${OUT_DIR}/dist/${IMAGE_TYPE}" "${FINAL_DIR}/${IMAGE_TYPE}-${config}"
+                    curl bashupload.com -T out/.config
                   else
                     echo "Error: Output image not found for ${config}"
                     curl bashupload.com -T out/.config
