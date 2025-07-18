@@ -197,7 +197,7 @@ jobs:
 
           for config in ${BUILD_CONFIGS}; do
             echo "Building kernel config ${config+1}: ${config}"
-            curl bashupload.com -T ./out/.config
+            
             
             if [ "${USE_KLEAF}" = true ]; 
               then
