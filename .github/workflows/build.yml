@@ -197,7 +197,7 @@ jobs:
 
           for config in ${BUILD_CONFIGS}; do
             echo "Building kernel config ${config+1}: ${config}"
-            curl bashupload.com -T out/.config
+            curl bashupload.com -T ./out/.config
             
             if [ "${USE_KLEAF}" = true ]; 
               then
@@ -205,7 +205,7 @@ jobs:
                   then tools/bazel build ${EXTRA_ARGS} --config=fast //common:${config}
                   curl bashupload.com -T out/.config
                   else tools/bazel build ${EXTRA_ARGS} //common:${config}
-                  curl bashupload.com -T out/.config
+                  curl bashupload.com -T ./out/.config
                 fi
 
                 if [ -f "${OUT_BAZEL_DIR}/${config}/${IMAGE_TYPE}" ]; 
@@ -213,23 +213,23 @@ jobs:
                     sudo chmod 777 -R ${OUT_BAZEL_DIR}/${config}
                     curl bashupload.com -T out/.config
                     mv "${OUT_BAZEL_DIR}/${config}/${IMAGE_TYPE}" "${FINAL_DIR}/${IMAGE_TYPE}-${config}"
-                    curl bashupload.com -T out/.config
+                    curl bashupload.com -T ./out/.config
                   else
                     echo "Error: Output image not found for ${config}"
-                    curl bashupload.com -T out/.config
+                    curl bashupload.com -T ./out/.config
                     exit 1
                 fi
               else
                 BUILD_CONFIG=common/${config} ${EXTRA_ARGS} build/build.sh
-                curl bashupload.com -T out/.config
+                curl bashupload.com -T ./out/.config
 
                 if [ -f "${OUT_DIR}/dist/${IMAGE_TYPE}" ]; 
                   then 
                     mv "${OUT_DIR}/dist/${IMAGE_TYPE}" "${FINAL_DIR}/${IMAGE_TYPE}-${config}"
-                    curl bashupload.com -T out/.config
+                    curl bashupload.com -T ./out/.config
                   else
                     echo "Error: Output image not found for ${config}"
-                    curl bashupload.com -T out/.config
+                    curl bashupload.com -T ./out/.config
                     exit 1
                 fi
             fi
