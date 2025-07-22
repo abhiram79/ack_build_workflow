@@ -235,7 +235,16 @@ jobs:
             fi
           done
           
-
+      - name: Upload .config even if build fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: generated-defconfig
+          path: |
+           kernel-build/out/.config
+           kernel-build/out/common/.config
+           if-no-files-found: warn
+    
       - name: Upload generated .config
         uses: actions/upload-artifact@v4
         with:
